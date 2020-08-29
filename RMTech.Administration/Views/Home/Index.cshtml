@@ -1,0 +1,23 @@
+﻿@model List<RMTech.Administration.Models.Customer>
+@{ 
+    ViewBag.Title = "RM Tech Solutions | backend";
+
+}
+
+<style type="text/css">
+    form[name='FormInvoice'] {
+       
+    }
+    input, select {margin-bottom: 0.5em;}
+    form {
+        margin-bottom: 2em;
+        width: 80%;
+    }
+</style>
+@section SPAViews {
+    @Html.Partial("_Home")
+}
+@section Scripts{
+
+    @Scripts.Render("~/bundles/app")
+}

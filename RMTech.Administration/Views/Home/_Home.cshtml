@@ -1,0 +1,113 @@
+﻿<script src="~/Scripts/angular.js"></script>
+
+<div ng-app="app">
+
+    <div ng-show="1" ng-controller="InvoiceController" ng-init="customers=@Newtonsoft.Json.JsonConvert.SerializeObject(Model)">
+
+
+        <h2>Create Invoice</h2>
+        <form name="FormInvoice">
+            Customer Name
+            <select ng-model="selectedCustomer" ng-change="selectedCustomerChanged()" class="form-control">
+                @foreach (var c in Model)
+                {
+                    <option value="@c.Id">@c.CustName - @c.CustAddr1</option>
+                }
+
+            </select>
+            <div style="display:none">
+                <input type="text" class="form-control" name="CustomerName" placeholder="Customer name" ng-model="newInvoice.CustomerName" />
+                <input type="text" class="form-control" name="CustomerAddress1" placeholder="Customer address 1" ng-model="newInvoice.CustomerAddress1" />
+                <input type="text" class="form-control" name="CustomerAddress2" placeholder="Customer address 2" ng-model="newInvoice.CustomerAddress2" />
+                <input type="text" class="form-control" name="CustomerCity" placeholder="Customer city" ng-model="newInvoice.CustomerCity" />
+                <input type="text" class="form-control" name="CustomerState" placeholder="Customer state" ng-model="newInvoice.CustomerState" />
+                <input type="text" class="form-control" name="CustomerZip" placeholder="CustomerZip" ng-model="newInvoice.CustomerZip" />
+                <input type="text" class="form-control" name="CustomerPhone" placeholder="Customer Phone" ng-model="newInvoice.CustomerPhone" />
+            </div>
+   Invoice Date
+            <input type="date" class="form-control" name="InvoiceDate" placeholder="Invoice Date" ng-model="newInvoice.InvoiceDate" />
+         
+            
+            <span>{{ getInvoiceTotal() }}</span>
+          
+            <div ng-repeat="line in newInvoice.Lines">
+                <div class="row">
+                    <div class="col-sm-2">
+                        Service Date
+                        <input type="date" class="form-control" ng-model="line.SvcDate" />
+                    </div>
+                    <div class="col-sm-4">
+                        Description 
+                        <input class="form-control" type="text" ng-model="line.Descr" placeholder="Description" />
+                    </div>
+                    <div class="col-sm-1">
+                        Hours 
+                        <input class="form-control" type="number" ng-model="line.Hours" placeholder="Hours" />
+                    </div>
+                    <div class="col-sm-2">
+                        Rate 
+                        <input class="form-control" type="number" ng-model="line.Rate" placeholder="Rate" />
+                    </div>
+                    <div class="col-sm-1"> 
+                        Total 
+                        <span> {{ line.Hours * line.Rate | currency }}</span>
+                    </div>
+                </div>
+               
+            </div>
+            <div>
+                <a class="btn btn-primary" ng-click="newLine()">+ Line</a>
+                <a class="btn btn-primary" ng-click="createInvoice();">Create</a>
+            </div>
+        </form>
+
+        <div>
+            <h2>Recent Invoices</h2>
+            <div ng-repeat="invoice in recentInvoices" class="row">
+                <div class="col-sm-1">
+                    {{ invoice.Id }}
+                </div>
+                <div class="col-sm-1">
+                    {{ invoice.InvStatus }}
+                </div>
+                <div class="col-sm-1">
+                    {{ invoice.InvoiceDate | date:"MM/dd/yyyy" }}
+                </div>
+                <div class="col-sm-6">
+                    <a href="~/edit-invoice/{{invoice.Id}}" target="_blank">
+                        {{ invoice.CustomerName }} - {{ invoice.CustomerAddress1 }}
+                    </a>
+                 
+                </div>
+                <div class="col-sm-2">
+                    {{ invoice.InvoiceTotal | currency }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    
+
+    <div ng-controller="CustomerController" ng-init="customers=@Newtonsoft.Json.JsonConvert.SerializeObject(Model)">
+        <h2>Customer Maintenance</h2>
+        <select ng-model="selectedCustomer" ng-change="selectedCustomerChanged()" class="form-control">
+            @foreach (var c in Model)
+            {
+                <option value="@c.Id">@c.CustName - @c.CustAddr1</option>
+            }
+
+        </select>
+
+        <input type="text" class="form-control" name="CustomerName" placeholder="Customer name" ng-model="editCust.CustName" />
+        <input type="text" class="form-control" name="CustomerAddress1" placeholder="Customer address 1" ng-model="editCust.CustAddr1" />
+        <input type="text" class="form-control" name="CustomerAddress2" placeholder="Customer address 2" ng-model="editCust.CustAddr2" />
+        <input type="text" class="form-control" name="CustomerCity" placeholder="Customer city" ng-model="editCust.CustCity" />
+        <input type="text" class="form-control" name="CustomerState" placeholder="Customer state" ng-model="editCust.CustState" />
+        <input type="text" class="form-control" name="CustomerZip" placeholder="CustomerZip" ng-model="editCust.CustZip" />
+        <input type="text" class="form-control" name="CustomerPhone" placeholder="Customer Phone" ng-model="editCust.CustPhone" />
+        <a class="btn btn-primary" ng-click="saveCustomer()">Save Changes</a>
+    </div>
+</div>
+@Scripts.Render("~/Content/page/HomeController.js")

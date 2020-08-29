@@ -1,0 +1,86 @@
+﻿@model RMTech.Administration.Models.Invoice
+
+@{
+    ViewBag.Title = "Edit Invoice";
+}
+
+<style type="text/css">
+.key-value span {
+    display: inline-block;
+    margin-right: 1.5em;
+}    
+.input-number {
+    width: 5em;
+    display: inline-block;
+}
+</style>
+<script src="~/Scripts/angular.js"></script>
+
+@Scripts.Render("~/Content/page/EditInvoiceController.js")
+<div ng-app="app" ng-controller="EditInvoiceController" ng-init="Invoice = @Newtonsoft.Json.JsonConvert.SerializeObject(Model)">
+
+    <section style="position:absolute;width:100%;display:block;padding:5px;background-color:#808080; color:#fff;" ng-show="ajaxMessage">
+        {{ ajaxMessage }}
+    </section>
+
+    <h2>Edit Invoice</h2>
+    <b>{{ Invoice.CustomerName }} - {{ Invoice.CustomerAddress1 }}</b>
+    <section>
+        <a ng-click="saveChanges()" class="btn btn-success">Save Changes</a>
+        <a href="~/get-invoice/@Model.Id" target="_blank" class="btn btn-success">Print</a>
+    </section>
+    <section class="key-value" style="margin-bottom:2em;">
+        <span>Invoice Number</span><b>{{ Invoice.Id }}</b><br/>
+        <span>Invoice Date</span><input type="text" ng-model="Invoice.InvoiceDate" class="form-control" style="width:8em;" /><br/>
+        <span>Total</span><b>{{ Invoice.InvoiceTotal | currency }}</b><br />
+
+        <div class="row">
+            <div class="col-sm-1">
+                Status
+            </div>
+            <div class="col-sm-2">
+                <select ng-model="Invoice.InvStatus" class="form-control">
+                    <option value="N">New</option>
+                    <option value="S">Sent</option>
+                    <option value="P">Paid</option>
+                    <option value="X">Cancelled</option>
+                </select>
+            </div>
+        </div>
+
+    </section>
+    <section>
+        <table class="table">
+            <tbody>
+                <tr ng-repeat="line in Invoice.Lines">
+                    <td>
+                    <input type="text" ng-model="line.SvcDate" class="form-control" />
+                   </td>
+                    <td>
+                    <textarea ng-model="line.Descr" class="form-control"></textarea>
+                   </td>
+                    <td>
+                    <input type="number" ng-model="line.Hours" class="form-control input-number" />
+                    </td>
+                    <td><input type="number" ng-model="line.Rate" class="form-control input-number" /></td>
+                    <td>
+                        <label>$</label>
+                             <input type="number" disabled="disabled" ng-model="line.LineTotal" class="form-control input-number" />
+                       
+                      
+                       {{ calculateLineTotal(line) }}
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" ng-click="removeLine(line)">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section>
+        <a class="btn btn-success" ng-click="addInvoiceLine()">Add Line</a>
+    </section>
+</div>
+

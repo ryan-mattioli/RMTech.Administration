@@ -1,0 +1,226 @@
+﻿
+@model RMTech.Administration.Models.Invoice
+@using RMTech.Administration.Models;
+@{
+    ViewBag.Title = "Invoice # " + Model.Id;
+    Layout = "";
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<style type="text/css">
+    @@font-face {
+        font-family: 'TexGyreHeros';
+        src: url('/content/fonts/TexGyreHeros-regular.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @@font-face {
+        font-family: 'TexGyreHeros';
+        src: url('/content/fonts/TexGyreHeros-italic.woff') format('woff');
+        font-weight: normal;
+        font-style: italic;
+    }
+
+    @@font-face {
+        font-family: 'TexGyreHeros';
+        src: url('/content/fonts/TexGyreHeros-bold.woff') format('woff');
+        font-weight: bold;
+        font-style: normal;
+    }
+
+    @@font-face {
+        font-family: 'TexGyreHeros Cn';
+        src: url('/content/fonts/TexGyreHeroscn-regular.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @@font-face {
+        font-family: 'TexGyreHeros Cn';
+        src: url('/content/fonts/TexGyreHeroscn-bold.woff') format('woff');
+        font-weight: bold;
+        font-style: normal;
+    }
+
+    .container, h1, h2, h3, h4, h5, h6 {
+        font-family: TexGyreHeros;
+    }
+
+    .container {
+
+
+    }
+        .lines-table {
+            font-size: 10.5pt;
+        }
+
+    .col-print-1 {
+        width: 8%;
+        float: left;
+    }
+
+    .col-print-2 {
+        width: 16%;
+        float: left;
+    }
+
+    .col-print-3 {
+        width: 25%;
+        float: left;
+    }
+
+    .col-print-4 {
+        width: 33%;
+        float: left;
+    }
+
+    .col-print-5 {
+        width: 42%;
+        float: left;
+    }
+
+    .col-print-6 {
+        width: 50%;
+        float: left;
+    }
+
+    .col-print-7 {
+        width: 58%;
+        float: left;
+    }
+
+    .col-print-8 {
+        width: 66%;
+        float: left;
+    }
+
+    .col-print-9 {
+        width: 75%;
+        float: left;
+    }
+
+    .col-print-10 {
+        width: 83%;
+        float: left;
+    }
+
+    .col-print-11 {
+        width: 92%;
+        float: left;
+    }
+
+    .col-print-12 {
+        width: 100%;
+        float: left;
+    }
+    @@media print {
+        @@page
+    {
+            size: portrait;
+           margin: 0;
+        }
+        body {
+            margin: 0.5in 0.5in;
+        }
+    }
+
+</style>
+
+<div class="container">
+    <div>
+        <div class="row" >
+            <div class="row">
+            <div class="col-sm-6 col-print-6">
+                <img src="~/Content/images/rmts_logo_v4.png" style="width:150px;" /><br />
+                2342 W Rosemont Av #1<br />
+                Chicago, IL 60659<br />
+                (312) 483-8680 <br /> service@rmtech.solutions
+            </div>
+                <div class="col-sm-6 col-print-6 text-right">
+                   
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Invoice Date</th>
+                                <th class="text-center">Invoice #</th>
+                                <th class="text-right">Amount Due</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @Model.InvoiceDate.ToString("MM/dd/yyyy")
+                                </td>
+                        <td class="text-center">
+                            @Model.Id
+                        </td>
+                       
+                        <td>
+                            <div style="white-space: nowrap" class="text-right">
+                                $ @Model.InvoiceTotal
+                            </div>
+                          
+                        </td>
+                               
+                    </tr>
+                </tbody>
+            </table>
+                    <div class="text-right" style="font-size:1.2em;font-weight:bold;">
+                        @Model.CustomerName
+                        <p>
+                            @Model.CustomerAddress1 <br />
+                            @Model.CustomerCity, @Model.CustomerState @Model.CustomerZip <br />
+                            @Model.CustomerPhone
+                        </p>
+                    </div>
+           </div>
+        </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2 class="text-center"><strong>INVOICE</strong></h2>
+                </div>
+            </div>
+        </div>
+
+        <table class="table  lines-table" style="min-height:15em;">
+            <thead>
+                <tr>
+                    <th>Service Date</th>
+                    <th>Description</th>
+                    <th class="text-center">Hours</th>
+                    <th class="text-center">Rate</th>
+                    <th   class="text-center" style="white-space: nowrap">Line Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            @foreach (InvoiceLine line in Model.Lines.OrderByDescending(x=>x.SvcDate))
+            {
+                <tr>
+                    <td style="width:8em;">
+                        @line.SvcDate.ToString("MM/dd/yyyy")
+                    </td>
+                    <td>
+                        @line.Descr
+                    </td>
+                    <td  class="text-center">
+                        @line.Hours
+                    </td>
+                    <td  class="text-center">
+                        @line.Rate
+                    </td>
+                    <td  class="text-center">
+                        $ @line.LineTotal
+                    </td>
+                </tr>
+
+            }
+        </table>
+
+       
+        <div style="margin-top: 1em;padding-top:1em;position:absolute;bottom:5em;width:80%;">
+            <hr />
+            <strong>Thank you for your business!</strong>
+        </div>
+
+    </div>
+</div>
